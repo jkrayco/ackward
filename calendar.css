@@ -1,12 +1,28 @@
 /*******************************Calendar Top Navigation*********************************/
+
+div#header{
+    margin: 0px auto;
+    width: 602px;
+    /*background-color: black;*/
+}
+
+div#header h1{
+    color: black;
+    text-align: center;
+}
+
 div#calendar{
   margin:0px auto;
+  margin-top: 0;
+  margin-left: 10%;
   padding:0px;
   width: 602px;
   font-family:Helvetica, "Times New Roman", Times, serif;
+  float: left;
 }
  
 div#calendar div.box{
+    float:left;
     position:relative;
     top:0px;
     left:0px;
@@ -119,6 +135,25 @@ div#calendar ul.dates li:hover{
  
 :focus{
     outline:none;
+}
+
+
+.sidebar{
+    /*background-color: black;*/
+    height: 510px;
+    margin-left: 58%;   
+    margin-right: 10%;
+    word-wrap: break-word;
+    border: 2px solid gray;
+    padding: 2px 10px 2px 10px;
+}
+
+.sidebar p{
+    font-family: Helvetica;
+    color: black;
+    font-size: 20px;
+    overflow: scroll;
+    word-wrap: break-word;
 }
  
 div.clear{

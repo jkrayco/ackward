@@ -59,9 +59,11 @@ class Calendar {
          
         $this->currentMonth=$month;
          
-        $this->daysInMonth=$this->_daysInMonth($month,$year);  
+        $this->daysInMonth=$this->_daysInMonth($month,$year);
+
          
-        $content='<div id="calendar">'.
+        $content='<div id="header"><h1>ACKWard Calendar</h1></div>'.
+        '<div id="calendar">'.
                         '<div class="box">'.
                         $this->_createNavi().
                         '</div>'.
@@ -82,12 +84,12 @@ class Calendar {
                                  
                                 $content.='</a></ul>';
                                  
-                                $content.='<div class="clear"></div>';     
+                                $content.='<div class="clear"></div>';
              
                         $content.='</div>';
                  
-        $content.='</div>';
-        return $content;   
+        $content.='</div><div class="sidebar"><p><a href="#">Add event</a><br><br>Events for the Day:<br><li>1pm-2pm: hjsdas - [edit] [delete]</li><li>4pm-5pm: hjsdkaskdj - [edit] [delete]</li></p></div>';
+        return $content;
     }
      
     /********************* PRIVATE **********************/ 
