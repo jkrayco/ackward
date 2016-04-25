@@ -111,6 +111,11 @@ div#calendar ul.dates li{
     color:#000;
     text-align:center; 
 }
+
+div#calendar ul.dates li:hover{
+    background-color: #FFFFFF;
+    text-decoration: underline;
+}
  
 :focus{
     outline:none;

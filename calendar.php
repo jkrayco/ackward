@@ -68,7 +68,7 @@ class Calendar {
                         '<div class="box-content">'.
                                 '<ul class="label">'.$this->_createLabels().'</ul>';   
                                 $content.='<div class="clear"></div>';     
-                                $content.='<ul class="dates">';    
+                                $content.='<a href="#"><ul class="dates">';    
                                  
                                 $weeksInMonth = $this->_weeksInMonth($month,$year);
                                 // Create weeks in a month
@@ -80,7 +80,7 @@ class Calendar {
                                     }
                                 }
                                  
-                                $content.='</ul>';
+                                $content.='</a></ul>';
                                  
                                 $content.='<div class="clear"></div>';     
              
