@@ -58,7 +58,7 @@ function getCalender($year = '',$month = '')
 					if(($cb >= $currentMonthFirstDay+1 || $currentMonthFirstDay == 7) && $cb <= ($totalDaysOfMonthDisplay)){
 						//Current date
 						$currentDate = $dateYear.'-'.$dateMonth.'-'.$dayCount;
-						//$eventNum = 0;
+						$eventNum = 0;
 						//Include db configuration file
 						#include 'dbConfig.php';
 						//Get number of events based on the current date
@@ -67,8 +67,8 @@ function getCalender($year = '',$month = '')
 						$result = mysql_query($strSQL) or die (mysql_error());
 						#$eventNum = $result->num_rows;
 						#$eventNum = mysql_fetch_array($result);
-						while($eventNum = mysql_fetch_array($result)){
-							echo $eventNum[0];
+						while($event = mysql_fetch_array($result)){
+							$eventNum = mysql_num_rows($result);
 						}
 						//Define date cell color
 						if(strtotime($currentDate) == strtotime(date("Y-m-d"))){
@@ -192,15 +192,18 @@ function getYearList($selected = ''){
  */
 function getEvents($date = ''){
 	//Include db configuration file
-	include 'dbConfig.php';
+	//include 'dbConfig.php';
+	mysql_connect("localhost", "root", "") or die (mysql_error());
+	mysql_select_db("calendar") or die(mysql_error());
 	$eventListHTML = '';
 	$date = $date?$date:date("Y-m-d");
 	//Get events based on the current date
-	$result = "SELECT title FROM events WHERE date = '".$date."' AND status = 1";
-	if($result->num_rows > 0){
+	$strSQL = "SELECT title FROM events WHERE date = '".$date."' AND status = 1";
+	$result = mysql_query($strSQL) or die (mysql_error());
+	if(mysql_num_rows($result) > 0){
 		$eventListHTML = '<h2>Events on '.date("l, d M Y",strtotime($date)).'</h2>';
 		$eventListHTML .= '<ul>';
-		while($row = $result->fetch_assoc()){ 
+		while($row = mysql_fetch_array($result)){ 
             $eventListHTML .= '<li>'.$row['title'].'</li>';
         }
 		$eventListHTML .= '</ul>';
