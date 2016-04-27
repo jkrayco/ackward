@@ -1,22 +1,42 @@
-#include <UIPUdp.h>
 #include <SPI.h>
 #include <UIPEthernet.h>
+#include <UIPUdp.h>
 #include <Time.h>
-#include <Dns.h>
+#include <Wire.h>
+#include <LCD.h>
+#include <DNS.h>
+#include <LiquidCrystal_I2C.h>
+
+//LCD Settings
+
+
+#define I2C_ADDR    0x3F // <<----- Add your address here.  Find it from I2C Scanner
+#define BACKLIGHT_PIN     3
+#define En_pin  2
+#define Rw_pin  1
+#define Rs_pin  0
+#define D4_pin  4
+#define D5_pin  5
+#define D6_pin  6
+#define D7_pin  7
+
+LiquidCrystal_I2C lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin);
 
 
 /* ******** Ethernet Card Settings ******** */
 // Set this to your Ethernet Card Mac Address
-byte mac[] = {0x54,0x55,0x58,0x10,0x00,0x24};
+byte mac[] = { 0x90, 0xA2, 0xDA, 0x00, 0x23, 0x36 };
 
+/* ******** NTP Server Settings ******** */
+/* us.pool.ntp.org NTP server
+   (Set to your time server of choice) */
 IPAddress timeServer;
 
 /* Set this to the offset (in seconds) to your local time
-   This example is GMT + 8 */
+   This example is GMT - 4 */
 const long timeZoneOffset = +28800L; 
 
-/* Syncs to NTP server every 15 seconds for testing,
-   set to 1 hour or more to be reasonable */
+/* Syncs to NTP server every 20 minutes */
 unsigned int ntpSyncTime = 1200;       
 
 
@@ -35,10 +55,12 @@ unsigned long ntpLastUpdate = 0;
 time_t prevDisplay = 0;           
 
 void setup() {
-  Serial.begin(9600);
-
-  pinMode(4,OUTPUT);
-  digitalWrite(4,HIGH);
+   lcd.begin (16,2);
+   lcd.setBacklight(HIGH);
+  
+   lcd.setBacklightPin(BACKLIGHT_PIN,POSITIVE);
+   
+   Serial.begin(9600);
   
    // Ethernet shield and NTP setup
    int i = 0;
@@ -126,6 +148,37 @@ void clockDisplay(){
   Serial.print(" ");
   Serial.print(year());
   Serial.println();
+ 
+ lcd.setCursor (0,0);
+  if (hour() < 10){
+    lcd.print("0"); }
+  if (hour() > 12){
+    lcd.print(hour()-12);}
+  else {
+    lcd.print(hour()); } 
+    lcd.print(":");
+  if (minute() < 10){
+    lcd.print("0"); }
+    lcd.print(minute());
+    lcd.print(":");
+  if (second() < 10){
+    lcd.print("0"); }
+    lcd.print(second());
+   if (hour() > 12){
+    lcd.print(" PM"); }
+    else {
+    lcd.print(" AM"); } 
+ 
+  lcd.setCursor (0,1);
+  if (month() < 10){
+   lcd.print("0"); }
+   lcd.print(month());
+   lcd.print("/");
+  if (day() < 10){
+   lcd.print("0"); }
+   lcd.print(day());
+   lcd.print("/");
+   lcd.print(year());
 }
 
 // Utility function for clock display: prints preceding colon and leading 0
