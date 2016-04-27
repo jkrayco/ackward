@@ -50,7 +50,7 @@ function getCalender($year = '',$month = '')
 		<div id="calender_section_bot">
 			<ul>
 			<?php 
-				mysql_connect("localhost", "root", "") or die (mysql_error());
+				mysql_connect("localhost", "root", "root") or die (mysql_error());
 				mysql_select_db("calendar") or die(mysql_error());
 
 				$dayCount = 1; 
@@ -87,7 +87,9 @@ function getCalender($year = '',$month = '')
 						echo '<div id="date_popup_'.$currentDate.'" class="date_popup_wrap none">';
 						echo '<div class="date_window">';
 						echo '<div class="popup_event">Events ('.$eventNum.')</div>';
-						echo ($eventNum > 0)?'<a href="javascript:;" onclick="getEvents(\''.$currentDate.'\');">view events</a>':'';
+						echo ($eventNum > 0)?'<a href="javascript:;" onclick="getEvents(\''.$currentDate.'\');">view events</a><br>':'';
+						echo '<a href="javascript:;" onclick="addEvent(\''.$currentDate.'\');">add event</a>';
+
 						echo '</div></div>';
 						
 						echo '</li>';
@@ -156,6 +158,14 @@ function getCalender($year = '',$month = '')
 				$('#event_list').slideUp('slow');
 			});
 		});
+
+		function confirmDelete() { 
+			var status = confirm("Are you sure you want to delete?");   
+			if(status){
+				
+			}
+		}
+
 	</script>
 <?php
 }
@@ -193,7 +203,7 @@ function getYearList($selected = ''){
 function getEvents($date = ''){
 	//Include db configuration file
 	//include 'dbConfig.php';
-	mysql_connect("localhost", "root", "") or die (mysql_error());
+	mysql_connect("localhost", "root", "root") or die (mysql_error());
 	mysql_select_db("calendar") or die(mysql_error());
 	$eventListHTML = '';
 	$date = $date?$date:date("Y-m-d");
@@ -204,10 +214,11 @@ function getEvents($date = ''){
 		$eventListHTML = '<h2>Events on '.date("l, d M Y",strtotime($date)).'</h2>';
 		$eventListHTML .= '<ul>';
 		while($row = mysql_fetch_array($result)){ 
-            $eventListHTML .= '<li>'.$row['title'].'</li>';
+            $eventListHTML .= '<li>'.$row['title'].' <a href="javascript:;">[edit]</a> <a href="#" onclick="javascript:confirmDelete();">[del]</a></li>';
         }
 		$eventListHTML .= '</ul>';
 	}
 	echo $eventListHTML;
 }
+
 ?>
