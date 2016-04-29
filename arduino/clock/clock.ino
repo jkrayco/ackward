@@ -156,7 +156,6 @@ void checkEvent(){
     if (client.connect(server, 80)) {
       Serial.println("Connected");
       // Make an HTTP request:
-      client.flush();
       client.println("GET /ackward/test.php HTTP/1.1");
       client.println("Host: 192.168.1.5");
       client.println("Connection: close");
@@ -168,34 +167,28 @@ void checkEvent(){
    
   // if there are incoming bytes available
   // from the server, read them and print them:
-  while (client.available()) {
-    char c = client.read();
-    Serial.print(c);
-    if (c == '*')
-      start = true;
-    else if (start){
-      if (c == ',')
-        comma = true;
-      else if (!comma)
-        eventTitle += c;
-      else
-        eventTime += c;
-    }  
+  while (client.connected()){
+    while (client.available()) {
+      char c = client.read();
+      if (c == '*')
+        start = true;
+      else if (start){
+        if (c == ',')
+          comma = true;
+        else if (!comma)
+          eventTitle += c;
+        else
+          eventTime += c;
+      }  
+    }
   }
 
   // if the server's disconnected, stop the client:
-  if (!client.connected()) {
     Serial.println();
     Serial.print(eventTitle);
     Serial.print(", ");
     Serial.println(eventTime.toInt());
-    Serial.println("disconnecting.");
     client.stop();
-  }
-  start = false;
-  comma = false;
-  eventTitle = "";
-  eventTime = "";
 }
 
 void setup() {
@@ -210,34 +203,34 @@ void setup() {
   Ethernet.begin(mac, ip);
   
   delay(1000);
-	
-	//print your local IP address:
-	Serial.print("My IP address: ");
-	for (byte thisByte = 0; thisByte < 4; thisByte++) {
-  	// print the value of each byte of the IP address:
-  	Serial.print(Ethernet.localIP()[thisByte], DEC);
-  	Serial.print(".");
-	}
-	Serial.println();
+  
+  //print your local IP address:
+  Serial.print("My IP address: ");
+  for (byte thisByte = 0; thisByte < 4; thisByte++) {
+    // print the value of each byte of the IP address:
+    Serial.print(Ethernet.localIP()[thisByte], DEC);
+    Serial.print(".");
+  }
+  Serial.println();
 
-	DNSClient dns;
+  DNSClient dns;
   dns.begin(Ethernet.dnsServerIP());
   while(!dns.getHostByName("pool.ntp.org",timeServer));
-	Serial.print("NTP IP from the pool: ");
-	Serial.println(timeServer);
-	  
-	//Try to get the date and time
-	int trys=0;
-	while(!getTimeAndDate() && trys<10) {
-		trys++;
-	}
+  Serial.print("NTP IP from the pool: ");
+  Serial.println(timeServer);
+    
+  //Try to get the date and time
+  int trys=0;
+  while(!getTimeAndDate() && trys<10) {
+    trys++;
+  }
 }
 
 // This is where all the magic happens...
 void loop() {
     // Update the time via NTP server as often as the time you set at the top
     if(now()-ntpLastUpdate >= ntpSyncTime) {
-	    checkEvent();
+      checkEvent();
       int trys=0;
       while(!getTimeAndDate() && trys<10){
         trys++;
