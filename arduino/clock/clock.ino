@@ -34,11 +34,11 @@ byte server[] = {192, 168, 1, 5};
 IPAddress timeServer;
 
 /* Set this to the offset (in seconds) to your local time
-   This example is GMT - 4 */
+   This example is GMT+8*/
 const long timeZoneOffset = +28800L; 
 
-/* Syncs to NTP server every 20 minutes */
-unsigned int ntpSyncTime = 10;       //10 seconds for testing
+/* Syncs to NTP server every 30 minutes */
+unsigned int ntpSyncTime = 1800;       //10 seconds for testing
 
 
 /* ALTER THESE VARIABLES AT YOUR OWN RISK */
@@ -53,7 +53,10 @@ EthernetUDP Udp;
 // Keeps track of how long ago we updated the NTP server
 unsigned long ntpLastUpdate = 0;   
 // Check last time clock displayed (Not in Production)
-time_t prevDisplay = 0;           
+time_t prevDisplay = 0;     
+
+int i, j = 0, alarmDuration = 60;
+String eventTitle = "", eventTime = "";
 
 // Do not alter this function, it is used by the system
 unsigned long sendNTPpacket(IPAddress& address)
@@ -104,19 +107,104 @@ void clockDisplay(){
   Serial.print(" ");
   Serial.print(year());
   Serial.println();
- 
+
+  if (prevDisplay >= eventTime.toInt() + timeZoneOffset && prevDisplay < eventTime.toInt() + timeZoneOffset + alarmDuration)
+    alarmNow();  
+  else {
+    lcd.setCursor (0,0);
+    if (month() < 10){
+      lcd.print("0");
+    }
+    lcd.print(month());
+    lcd.print("/");
+    if (day() < 10){
+      lcd.print("0");
+    }
+    lcd.print(day());
+    lcd.print("/");
+    lcd.print(year());
+    printTime();
+  }
+}
+
+// Utility function for clock display: prints preceding colon and leading 0
+void printDigits(int digits){
+  Serial.print(":");
+  if(digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
+}
+
+void checkEvent(){
+  EthernetClient client;
+  boolean comma = false, start = false;
+  
+  Serial.print("Connecting to events database... ");
+  
+    // if you get a connection, report back via serial:
+    if (client.connect(server, 80)) {
+      Serial.println("Connected.");
+      // Make an HTTP request:
+      client.println("GET /ackward/test.php HTTP/1.1");
+      client.println("Host: 192.168.1.5");
+      client.println("Connection: close");
+      client.println();
+    } else {
+      // if you didn't get a connection to the server:
+      Serial.println("Connection failed.");
+      Serial.println("Please restart the controller.");
+      while(true);
+    }
+   
+  // if there are incoming bytes available
+  // from the server, read them and print them:
+  while (client.connected()){
+    while (client.available()) {
+      char c = client.read();
+      if (c == '*')
+        start = true;
+      else if (start){
+        if (c == ',')
+          comma = true;
+        else if (!comma)
+          eventTitle += c;
+        else
+          eventTime += c;
+      }  
+    }
+  }
+  // when the server's disconnected, stop the client:
+    Serial.print(eventTitle);
+    Serial.print(", ");
+    Serial.println(eventTime.toInt());
+    client.stop();
+}
+
+void printTitle(){
   lcd.setCursor (0,0);
-  if (month() < 10){
-   lcd.print("0"); }
-   lcd.print(month());
-   lcd.print("/");
-  if (day() < 10){
-   lcd.print("0"); }
-   lcd.print(day());
-   lcd.print("/");
-   lcd.print(year());
- 
- lcd.setCursor (0,1);
+  if (eventTitle.length() > 16){
+    if(j == eventTitle.length())
+      j = 0;
+    for (i = j ; i < 16; i++){
+      if (i < eventTitle.length())
+        lcd.print(eventTitle[i]);
+      else
+        lcd.print(" ");
+    }
+    for (i = i ; i < j ; i++){
+      if (i > eventTitle.length())
+        lcd.print(" ");
+      else
+        lcd.print(eventTitle[i]);
+    }
+    j++;
+  }
+  else
+    lcd.print(eventTitle);
+}
+
+void printTime(){
+  lcd.setCursor (0,1);
   if (hour() < 10){
     lcd.print("0"); }
   if (hour() > 12){
@@ -137,58 +225,16 @@ void clockDisplay(){
     lcd.print(" AM"); } 
 }
 
-// Utility function for clock display: prints preceding colon and leading 0
-void printDigits(int digits){
-  Serial.print(":");
-  if(digits < 10)
-    Serial.print('0');
-  Serial.print(digits);
-}
-
-void checkEvent(){
-  EthernetClient client;
-  boolean comma = false, start = false;
-  String eventTitle = "", eventTime = "";
-  
-  Serial.println("Updating...");
-  
-    // if you get a connection, report back via serial:
-    if (client.connect(server, 80)) {
-      Serial.println("Connected");
-      // Make an HTTP request:
-      client.println("GET /ackward/test.php HTTP/1.1");
-      client.println("Host: 192.168.1.5");
-      client.println("Connection: close");
-      client.println();
-    } else {
-      // if you didn't get a connection to the server:
-      Serial.print("Connection failed: ");
-    }
-   
-  // if there are incoming bytes available
-  // from the server, read them and print them:
-  while (client.connected()){
-    while (client.available()) {
-      char c = client.read();
-      if (c == '*')
-        start = true;
-      else if (start){
-        if (c == ',')
-          comma = true;
-        else if (!comma)
-          eventTitle += c;
-        else
-          eventTime += c;
-      }  
-    }
+void alarmNow(){
+  printTitle();
+  printTime();
+  for (int k = 0; k < 4; k++){
+    lcd.setBacklight(LOW);
+    delay(100);
+    lcd.setBacklight(HIGH);
+    delay(100);  
   }
-
-  // if the server's disconnected, stop the client:
-    Serial.println();
-    Serial.print(eventTitle);
-    Serial.print(", ");
-    Serial.println(eventTime.toInt());
-    client.stop();
+  delay(200);
 }
 
 void setup() {
@@ -224,6 +270,12 @@ void setup() {
   while(!getTimeAndDate() && trys<10) {
     trys++;
   }
+  if(trys<10)
+    Serial.println("ntp server update success");
+  else
+    Serial.println("ntp server update failed");
+  
+  checkEvent();
 }
 
 // This is where all the magic happens...
@@ -236,16 +288,16 @@ void loop() {
         trys++;
       }
       if(trys<10){
-        Serial.println("ntp server update success");
+        Serial.println("NTP server update success.");
       }
       else{
-        Serial.println("ntp server update failed");
+        Serial.println("NTP server update failed");
       }
     }
   
     // Display the time if it has changed by more than a second.
     if( now() != prevDisplay){
       prevDisplay = now();
-      clockDisplay(); 
-    }
+      clockDisplay();
+   }
 }
