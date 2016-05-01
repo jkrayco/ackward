@@ -38,7 +38,7 @@ IPAddress timeServer;
 const long timeZoneOffset = +28800L; 
 
 /* Syncs to NTP server every 30 minutes */
-unsigned int ntpSyncTime = 1800;       //10 seconds for testing
+unsigned int ntpSyncTime = 10;       //10 seconds for testing
 
 
 /* ALTER THESE VARIABLES AT YOUR OWN RISK */
@@ -55,8 +55,8 @@ unsigned long ntpLastUpdate = 0;
 // Check last time clock displayed (Not in Production)
 time_t prevDisplay = 0;     
 
-int i, j = 0, alarmDuration = 60;
-String eventTitle = "", eventTime = "";
+int i, alarmDuration = 60;
+String eventTitle = "12345678901234567890123456789012", eventTime = "1234567890";
 
 // Do not alter this function, it is used by the system
 unsigned long sendNTPpacket(IPAddress& address)
@@ -108,9 +108,10 @@ void clockDisplay(){
   Serial.print(year());
   Serial.println();
 
-  if (prevDisplay >= eventTime.toInt() + timeZoneOffset && prevDisplay < eventTime.toInt() + timeZoneOffset + alarmDuration)
-    alarmNow();  
-  else {
+  //if (prevDisplay >= eventTime.toInt() + timeZoneOffset && prevDisplay < eventTime.toInt() + timeZoneOffset + alarmDuration && prevDisplay != 0)
+    //alarmNow();  
+//  else
+{
     lcd.setCursor (0,0);
     if (month() < 10){
       lcd.print("0");
@@ -138,9 +139,12 @@ void printDigits(int digits){
 void checkEvent(){
   EthernetClient client;
   boolean comma = false, start = false;
+  eventTitle = String();
+  eventTime = String();
   
-  Serial.print("Connecting to events database... ");
+  Serial.println("Connecting to events database... ");
   
+    //client.flush();
     // if you get a connection, report back via serial:
     if (client.connect(server, 80)) {
       Serial.println("Connected.");
@@ -174,13 +178,20 @@ void checkEvent(){
     }
   }
   // when the server's disconnected, stop the client:
+  if (!client.connected()) {
+    Serial.println();
     Serial.print(eventTitle);
     Serial.print(", ");
     Serial.println(eventTime.toInt());
+    Serial.println("Disconnected.");
     client.stop();
+  }
+  //eventTitle = "";
+  //eventTime = "";
 }
 
 void printTitle(){
+  int j = 0;
   lcd.setCursor (0,0);
   if (eventTitle.length() > 16){
     if(j == eventTitle.length())
@@ -228,18 +239,20 @@ void printTime(){
 void alarmNow(){
   printTitle();
   printTime();
-  for (int k = 0; k < 4; k++){
+  for (i = 0; i < 4; i++){
     lcd.setBacklight(LOW);
     delay(100);
     lcd.setBacklight(HIGH);
+    analogWrite(8, 250);
     delay(100);  
+    analogWrite(8, 0);
   }
   delay(200);
 }
 
 void setup() {
-  lcd.begin (16,2);
-  
+  pinMode(8, OUTPUT);
+  lcd.begin (16,2);  
   lcd.setBacklightPin(BACKLIGHT_PIN,POSITIVE);
   lcd.setBacklight(HIGH);
    
