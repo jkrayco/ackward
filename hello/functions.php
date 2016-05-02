@@ -159,10 +159,19 @@ function getCalender($year = '',$month = '')
 			});
 		});
 
-		function confirmDelete() { 
-			var status = confirm("Are you sure you want to delete?");   
-			if(status){
-				
+		function confirmDelete(id) {
+			var result = confirm("Are you sure you want to delete?" + id);
+			<?php
+				// $del = 'DELETE FROM events WHERE id = '.id.'';
+				$db = mysql_connect("localhost", "root", "root") or die (mysql_error());
+				mysql_select_db("calendar") or die(mysql_error());
+
+				$del = 'DELETE FROM events WHERE id = '.id.'';
+			?>
+			if(result){
+				<?php
+					$retval = mysql_query( $del, $db );
+				?>
 			}
 		}
 
@@ -208,13 +217,13 @@ function getEvents($date = ''){
 	$eventListHTML = '';
 	$date = $date?$date:date("Y-m-d");
 	//Get events based on the current date
-	$strSQL = "SELECT title FROM events WHERE date = '".$date."' AND status = 1";
+	$strSQL = "SELECT title, id FROM events WHERE date = '".$date."' AND status = 1";
 	$result = mysql_query($strSQL) or die (mysql_error());
 	if(mysql_num_rows($result) > 0){
 		$eventListHTML = '<h2>Events on '.date("l, d M Y",strtotime($date)).'</h2>';
 		$eventListHTML .= '<ul>';
 		while($row = mysql_fetch_array($result)){ 
-            $eventListHTML .= '<li>'.$row['title'].' <a href="javascript:;">[edit]</a> <a href="#" onclick="javascript:confirmDelete();">[del]</a></li>';
+            $eventListHTML .= '<li>'.$row['title'].' <a href="javascript:;">[edit]</a> <a href="#" onclick="confirmDelete('.$row['id'].')">[del]</a></li>';
         }
 		$eventListHTML .= '</ul>';
 	}
