@@ -1,0 +1,35 @@
+@charset "utf-8";
+.calendar {
+   width: 600px;
+}
+.calendar div {
+   float: left;
+   height: 80px;
+   width: 80px;
+   border: 1px solid #333333;
+}
+.calendar .monheader {
+   font-weight: bold;
+   color: #FFFFFF;
+   text-align: center;
+   height: 20px;
+   width: 572px;
+   background-color: #333333;
+}
+.calendar .dayheader {
+   font-weight: bold;
+   color: #FFFFFF;
+   text-align: center;
+   height: 20px;
+   background-color: #000000;
+}
+.calendar .day {
+   background-color: #FFFFCC;
+}
+.calendar .today {
+   background-color: #FFCC00;
+   border-color: #CC0000;
+}
+.calendar .inactive {
+   background-color: #666666;
+}
