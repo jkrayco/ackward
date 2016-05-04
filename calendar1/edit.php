@@ -1,5 +1,5 @@
 <?php
-	mysql_connect("localhost", "root", "") or die (mysql_error());
+	mysql_connect("localhost", "root", "root") or die (mysql_error());
 	mysql_select_db("calendar") or die(mysql_error());
 
 	$id = ''; 
@@ -19,4 +19,4 @@
 Name of Event: <input type="text" name="name" value="<?php echo $row['name'] ?>"> <br >
 Date and Time of Event: <input type="datetime" name="atime" value="<?php echo $row['atime'] ?>"><br >
 <input name = "update" type = "submit" id = "update" value = "Edit Event">
-</form>	
+</form>

@@ -1,6 +1,13 @@
 @charset "utf-8";
+
+body{
+   overflow: hidden;
+}
+
 .calendar {
    width: 600px;
+   display: inline-block;
+   float: left;
 }
 .calendar div {
    float: left;
@@ -32,4 +39,19 @@
 }
 .calendar .inactive {
    background-color: #666666;
+}
+
+.sidenav{
+   /*float: left;*/
+   height: 455px;
+   background-color: white;
+   width: 350px;
+   display: inline-block;
+   border: solid;
+   border-color: gray;
+   overflow: scroll;
+}
+
+.test{
+   margin-left: 100px;
 }

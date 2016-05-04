@@ -8,7 +8,7 @@ date and time: <?php if(isset($_POST["atime"]))
 <?php
 	if(isset($_POST['update']))
 		{
-			$conn = mysql_connect("localhost", "root", "");
+			$conn = mysql_connect("localhost", "root", "root");
 			mysql_select_db("calendar") or die(mysql_error());
 		
 

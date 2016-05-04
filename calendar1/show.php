@@ -7,7 +7,7 @@ date and time: <?php if(isset($_POST["atime"]))
 <?php
 	if(isset($_POST['add']))
 		{
-			$conn = mysql_connect("localhost", "root", "");
+			$conn = mysql_connect("localhost", "root", "root");
 		
 
 		if(! $conn)
@@ -33,4 +33,4 @@ date and time: <?php if(isset($_POST["atime"]))
    	}
 ?>
 <br>
-<a href="showall.php"> Show all Event </a>
+<a href="showall.php"> Show All Events </a>
