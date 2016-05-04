@@ -53,7 +53,7 @@ if($last['wday'] < 6){
 }
 ?>
 
-<a href="add.php"> Create Event </a>
+<a href="add.php"> Create Event </a><br>
 <a href="showall.php"> Show all Event </a>
 </div>
 </body>

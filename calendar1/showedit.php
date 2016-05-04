@@ -4,15 +4,22 @@ name of event: <?php if(isset($_POST["name"]))
 date and time: <?php if(isset($_POST["atime"]))
 					echo $_POST["atime"]; ?>
 <br>
+
 <?php
-	if(isset($_POST['add']))
+	if(isset($_POST['update']))
 		{
 			$conn = mysql_connect("localhost", "root", "");
+			mysql_select_db("calendar") or die(mysql_error());
 		
 
 		if(! $conn)
 		{
 			die (mysql_error());
+		}
+
+		$id = ''; 
+		if( isset( $_POST['id'])) {
+	   	 	$id = $_POST['id']; 
 		}
 
 		if(! get_magic_quotes_gpc() ) {
@@ -23,14 +30,15 @@ date and time: <?php if(isset($_POST["atime"]))
 	        $atime = $_POST['atime'];
 	    }
 
-	    $strSQL = "INSERT INTO event (name, atime) VALUES ('$name', '$atime')";
-	    mysql_select_db('calendar');
+	    $strSQL = "UPDATE event SET name = '$name', atime = '$atime' WHERE id = '$id'";
 	    $result = mysql_query($strSQL) or die (mysql_error());
 
-	    echo "Entered data successfully!";
+	    echo "Edited data successfully!";
 
 	    mysql_close($conn);
    	}
 ?>
+<br>
+<a href="add.php"> Create Event </a>
 <br>
 <a href="showall.php"> Show all Event </a>
