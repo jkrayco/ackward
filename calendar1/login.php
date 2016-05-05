@@ -21,30 +21,32 @@
 			}
 			else{
 				echo('Invalid username and password combination.');
-				#echo $hash;
 			}
 		}
 	}
 
 	if(isset($_POST['signup'])){
-		if(empty($_POST['username']) or empty($_POST['password'])){
+		if(empty($_POST['username']) or empty($_POST['password']) or empty($_POST['re-password'])){
 			echo('Invalid username and password combination. Cant sign up.');
 		}
 		else{
 			$username=$_POST['username'];
 			$password=$_POST['password'];
-			$hash=password_hash($password, PASSWORD_DEFAULT);
-			$database=mysql_select_db('ackward');
-			$sql = "INSERT INTO user (name, password) VALUES ('$username', '$hash')";
-			$result=mysql_query($sql);
+			$repassword=$_POST['re-password'];
 			
-			if ($result!=NULL) {
+			if ($repassword!=$password){
+				echo "Not same password.";
+			}
+			else{
+				$hash=password_hash($password, PASSWORD_DEFAULT);
+				$database=mysql_select_db('ackward');
+				$sql = "INSERT INTO user (name, password) VALUES ('$username', '$hash')";
+				$result=mysql_query($sql);
+			
 				$_SESSION['activeUser']=$username;
 				header("location: index.php");
 			}
-			else {
-				echo "Error";
-			}
+			
 			#$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
 			#$row=mysql_fetch_array($result);
 			#if($row!=NULL){
@@ -157,6 +159,27 @@
 				top:1px;
 			}
 
+			.alert {
+				padding: 20px;
+				background-color: #f44336; /* Red */
+				color: white;
+				margin-bottom: 15px;
+			}
+
+			/* The close button */
+			.closebtn {
+				margin-left: 15px;
+				color: white;
+				font-weight: bold;
+				float: right;
+				font-size: 22px;
+				line-height: 20px;
+				cursor: pointer;
+			}
+
+			.closebtn:hover {
+				color: black;
+			}
 
 		</style>
 	</head>
@@ -192,6 +215,8 @@
 					<input type="text" name="username" class="input-block-level" placeholder="Username"/>
 					<br>
 					<input type="password" name="password" class="input-block-level" placeholder="Password"/>
+					<br>
+					<input type="password" name="re-password" class="input-block-level" placeholder="Re-enter Password"/>
 					<br>
 					<center>
 					<input type="submit" name="signup" class="myButton" id="btn-login" style="color: #fffff" value="Sign Up"/>
