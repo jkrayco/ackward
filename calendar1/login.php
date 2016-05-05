@@ -12,15 +12,16 @@
 			$username=$_POST['username'];
 			$password=$_POST['password'];
 			$database=mysql_select_db('ackward');
-			$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
+			$result=mysql_query("SELECT password FROM user WHERE name='$username'");
 			$row=mysql_fetch_array($result);
-			if($row!=NULL){
+			$hash=row['password'];
+			if(password_verify($password, $hash)){
 				$_SESSION['activeUser']=$username;
 				header("location: index.php");
 			}
 			else{
 				echo('Invalid username and password combination.');
-				echo $hash;
+				#echo $hash;
 			}
 		}
 	}
@@ -32,8 +33,9 @@
 		else{
 			$username=$_POST['username'];
 			$password=$_POST['password'];
+			$hash=password_hash($password, PASSWORD_DEFAULT);
 			$database=mysql_select_db('ackward');
-			$sql = "INSERT INTO user VALUES ('$username', '$password')";
+			$sql = "INSERT INTO user VALUES ('$username', '$hash')";
 			$result=mysql_query($sql,$linkDB);
 			
 			if ($result!=NULL) {
