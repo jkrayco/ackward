@@ -4,7 +4,7 @@
 #include <Time.h>
 #include <Wire.h>
 #include <LCD.h>
-#include <DNS.h>
+#include <Dns.h>
 #include <LiquidCrystal_I2C.h>
 
 //LCD Settings
@@ -34,12 +34,11 @@ byte server[] = {192, 168, 1, 5};
 IPAddress timeServer;
 
 /* Set this to the offset (in seconds) to your local time
-   This example is GMT+8*/
+   This example is GMT + 4 */
 const long timeZoneOffset = +28800L; 
 
 /* Syncs to NTP server every 30 minutes */
-unsigned int ntpSyncTime = 10;       //10 seconds for testing
-
+unsigned int ntpSyncTime = 1800;
 
 /* ALTER THESE VARIABLES AT YOUR OWN RISK */
 // local port to listen for UDP packets
@@ -55,8 +54,12 @@ unsigned long ntpLastUpdate = 0;
 // Check last time clock displayed (Not in Production)
 time_t prevDisplay = 0;     
 
-int i, alarmDuration = 60;
-String eventTitle = "12345678901234567890123456789012", eventTime = "1234567890";
+int j = 0;
+String eventTitle = "12345678901234567890123456789012", eventTime = "1234567890"; //32-byte long eventTitle and 10-byte long eventTime strings
+
+void software_Reset(){ // Restarts program from beginning but does not reset the peripherals and registers
+  asm volatile ("  jmp 0");  
+}  
 
 // Do not alter this function, it is used by the system
 unsigned long sendNTPpacket(IPAddress& address)
@@ -95,69 +98,28 @@ int getTimeAndDate() {
    return flag;
 }
 
-// Clock display of the time and date (Basic)
-void clockDisplay(){
-  Serial.print(hour());
-  printDigits(minute());
-  printDigits(second());
-  Serial.print(" ");
-  Serial.print(day());
-  Serial.print(" ");
-  Serial.print(month());
-  Serial.print(" ");
-  Serial.print(year());
-  Serial.println();
-
-  //if (prevDisplay >= eventTime.toInt() + timeZoneOffset && prevDisplay < eventTime.toInt() + timeZoneOffset + alarmDuration && prevDisplay != 0)
-    //alarmNow();  
-//  else
-{
-    lcd.setCursor (0,0);
-    if (month() < 10){
-      lcd.print("0");
-    }
-    lcd.print(month());
-    lcd.print("/");
-    if (day() < 10){
-      lcd.print("0");
-    }
-    lcd.print(day());
-    lcd.print("/");
-    lcd.print(year());
-    printTime();
-  }
-}
-
-// Utility function for clock display: prints preceding colon and leading 0
-void printDigits(int digits){
-  Serial.print(":");
-  if(digits < 10)
-    Serial.print('0');
-  Serial.print(digits);
-}
-
 void checkEvent(){
   EthernetClient client;
   boolean comma = false, start = false;
   eventTitle = String();
   eventTime = String();
   
-  Serial.println("Connecting to events database... ");
-  
-    //client.flush();
+  Serial.print("Calendar Server... ");
+  lcd.clear();
+  lcd.print("Updating... ");
+  printDate();
+  printTime();
     // if you get a connection, report back via serial:
     if (client.connect(server, 80)) {
       Serial.println("Connected.");
       // Make an HTTP request:
       client.println("GET /ackward/test.php HTTP/1.1");
       client.println("Host: 192.168.1.5");
-      client.println("Connection: close");
       client.println();
     } else {
       // if you didn't get a connection to the server:
-      Serial.println("Connection failed.");
-      Serial.println("Please restart the controller.");
-      while(true);
+      Serial.println("Connection failed. Please restart the system.");
+      software_Reset();
     }
    
   // if there are incoming bytes available
@@ -177,36 +139,43 @@ void checkEvent(){
       }  
     }
   }
-  // when the server's disconnected, stop the client:
-  if (!client.connected()) {
-    Serial.println();
-    Serial.print(eventTitle);
-    Serial.print(", ");
-    Serial.println(eventTime.toInt());
-    Serial.println("Disconnected.");
+
+  // if the server's disconnected, stop the client:
+    Serial.println(eventTitle);
+    if (eventTime.length() != 0){
+      Serial.print((hour(eventTime.toInt() + timeZoneOffset))%12);
+      Serial.print(":");
+      if (minute(eventTime.toInt() + timeZoneOffset) < 10)
+        Serial.print("0");
+      Serial.print(minute(eventTime.toInt() + timeZoneOffset));
+      if (hour(eventTime.toInt() + timeZoneOffset) < 12)
+        Serial.println(" AM");
+      else
+        Serial.println(" PM");
+      
+    }
     client.stop();
-  }
-  //eventTitle = "";
-  //eventTime = "";
+    lcd.clear();
+}
+
+// Utility function for clock display: prints preceding colon and leading 0
+void printDigits(int digits){
+  Serial.print(":");
+  if(digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
 }
 
 void printTitle(){
-  int j = 0;
-  lcd.setCursor (0,0);
-  if (eventTitle.length() > 16){
-    if(j == eventTitle.length())
-      j = 0;
-    for (i = j ; i < 16; i++){
-      if (i < eventTitle.length())
-        lcd.print(eventTitle[i]);
+  int i;
+  lcd.setCursor(0,0);
+  if (eventTitle.length() > 12 || eventTitle.length() == 0){
+    j = j%(eventTitle.length());
+    for (i = j ; i < 12+j; i++){
+      if (i != eventTitle.length())
+        lcd.print(eventTitle[i%(eventTitle.length())]);
       else
         lcd.print(" ");
-    }
-    for (i = i ; i < j ; i++){
-      if (i > eventTitle.length())
-        lcd.print(" ");
-      else
-        lcd.print(eventTitle[i]);
     }
     j++;
   }
@@ -214,39 +183,64 @@ void printTitle(){
     lcd.print(eventTitle);
 }
 
-void printTime(){
-  lcd.setCursor (0,1);
-  if (hour() < 10){
-    lcd.print("0"); }
-  if (hour() > 12){
-    lcd.print(hour()-12);}
-  else {
-    lcd.print(hour()); } 
-    lcd.print(":");
-  if (minute() < 10){
-    lcd.print("0"); }
-    lcd.print(minute());
-    lcd.print(":");
-  if (second() < 10){
-    lcd.print("0"); }
-    lcd.print(second());
-   if (hour() > 12){
-    lcd.print(" PM"); }
-    else {
-    lcd.print(" AM"); } 
+void printDate(){
+  lcd.setCursor(12,0);
+  lcd.print(' ');
+  lcd.print(monthStr(month()));
+  lcd.setCursor(14,1);
+  lcd.print(day());
 }
 
-void alarmNow(){
+void printTime(){
+  lcd.setCursor (0,1);
+  if (hour()%12 < 10)
+    lcd.print("0");
+    lcd.print(hour()%12);
+  lcd.print(":");
+  if (minute() < 10)
+    lcd.print("0");
+  lcd.print(minute());
+  lcd.print(":");
+  if (second() < 10)
+    lcd.print("0");
+  lcd.print(second());
+  if (hour() > 12)
+    lcd.print(" PM");
+  else
+    lcd.print(" AM");
+}
+
+// Clock display of the time and date (Basic)
+void clockDisplay(){
   printTitle();
+  printDate();
   printTime();
-  for (i = 0; i < 4; i++){
+}
+
+void clockBeep(){
+  clockDisplay();
+  for (int i = 0; i < 4; i++){
     lcd.setBacklight(LOW);
+    analogWrite(8, 0);
     delay(100);
     lcd.setBacklight(HIGH);
     analogWrite(8, 250);
     delay(100);  
-    analogWrite(8, 0);
   }
+  analogWrite(8, 0);
+}
+
+void clockAlarm(){
+  clockDisplay();
+  for (int k = 0; k < 4; k++){
+    lcd.setBacklight(LOW);
+    analogWrite(8, 0);
+    delay(100);
+    lcd.setBacklight(HIGH);
+    analogWrite(8, 250);
+    delay(100);  
+  }
+  analogWrite(8, 0);
   delay(200);
 }
 
@@ -264,7 +258,7 @@ void setup() {
   delay(1000);
   
   //print your local IP address:
-  Serial.print("My IP address: ");
+  Serial.print("IP: ");
   for (byte thisByte = 0; thisByte < 4; thisByte++) {
     // print the value of each byte of the IP address:
     Serial.print(Ethernet.localIP()[thisByte], DEC);
@@ -275,19 +269,23 @@ void setup() {
   DNSClient dns;
   dns.begin(Ethernet.dnsServerIP());
   while(!dns.getHostByName("pool.ntp.org",timeServer));
-  Serial.print("NTP IP from the pool: ");
-  Serial.println(timeServer);
+  Serial.print("NTP IP: ");
+  Serial.print(timeServer);
+  Serial.println(".");
     
   //Try to get the date and time
   int trys=0;
+  Serial.print("NTP Server... ");
   while(!getTimeAndDate() && trys<10) {
     trys++;
   }
-  if(trys<10)
-    Serial.println("ntp server update success");
-  else
-    Serial.println("ntp server update failed");
-  
+  if(trys<10){
+    Serial.println("Connected.");
+  }
+  else{
+    Serial.println("Connection failed. Please restart the system.");
+    software_Reset();
+  }
   checkEvent();
 }
 
@@ -297,20 +295,36 @@ void loop() {
     if(now()-ntpLastUpdate >= ntpSyncTime) {
       checkEvent();
       int trys=0;
+      Serial.print("NTP Server... ");
       while(!getTimeAndDate() && trys<10){
         trys++;
       }
       if(trys<10){
-        Serial.println("NTP server update success.");
+        Serial.println("Connected.");
       }
       else{
-        Serial.println("NTP server update failed");
+        Serial.println("Connection failed. Please restart the system.");
+        software_Reset();
       }
     }
   
     // Display the time if it has changed by more than a second.
     if( now() != prevDisplay){
       prevDisplay = now();
-      clockDisplay();
-   }
+      if (prevDisplay >= eventTime.toInt() + timeZoneOffset && minute(prevDisplay) == minute(eventTime.toInt() + timeZoneOffset) && eventTime.length() != 0){
+        if (prevDisplay == eventTime.toInt() + timeZoneOffset)
+          j = 0;
+        clockAlarm();
+        if (second(prevDisplay) == 59){
+          checkEvent();
+          lcd.clear();
+        }
+      }
+      else if (prevDisplay == eventTime.toInt() + timeZoneOffset - ntpSyncTime){
+        j = 0;
+        clockBeep();
+      }
+      else
+        clockDisplay(); 
+    }
 }
