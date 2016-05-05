@@ -14,7 +14,7 @@
 			$password=$_POST['password'];
 			$result=mysql_query("SELECT password FROM user WHERE name='$username'");
 			$row=mysql_fetch_array($result);
-			$hash=row['password'];
+			$hash=$row['password'];
 			if(password_verify($password, $hash)){
 				$_SESSION['activeUser']=$username;
 				header("location: index.php");
