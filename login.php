@@ -3,7 +3,7 @@
 	$_SESSION['activeUser']=NULL;
 	$linkDB=@mysql_connect('localhost', 'root', 'root');
 	date_default_timezone_set('Asia/Manila');
-
+	/*
 	if(isset($_POST['login'])){
 		if(empty($_POST['username']) or empty($_POST['password'])){
 			echo('Invalid username and password combination.');
@@ -24,7 +24,7 @@
 			}
 		}
 	}
-
+	*/
 	if(isset($_POST['signup'])){
 		if(empty($_POST['username']) or empty($_POST['password'])){
 			echo('Invalid username and password combination. Cant sign up.');
@@ -33,15 +33,12 @@
 			$username=$_POST['username'];
 			$password=$_POST['password'];
 			$database=mysql_select_db('ackward');
-			$sql = "INSERT INTO user VALUES ('$username', '$password')";
-			$result=mysql_query($sql,$linkDB);
-			
-			if ($result!=NULL) {
-				$_SESSION['activeUser']=$username;
-				header("location: index.php");
-			}
-			else {
-				echo "Error";
+			$sql = "INSERT INTO user (name, password) VALUES ('$username', '$password')";
+
+			if ($conn->query($sql) === TRUE) {
+				echo "New record created successfully";
+			} else {
+				echo "Error: " . $sql . "<br>" . $conn->error;
 			}
 			#$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
 			#$row=mysql_fetch_array($result);
