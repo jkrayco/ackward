@@ -15,7 +15,7 @@
 			$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
 			$row=mysql_fetch_array($result);
 			#if(password_verify($password, $row[0])){
-			if(row!=NULL){
+			if($row!=NULL){
 				$_SESSION['activeUser']=$username;
 				header("location: calendar.php");
 			}
