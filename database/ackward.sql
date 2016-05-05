@@ -1,0 +1,27 @@
+DROP DATABASE IF EXISTS ackward;
+CREATE DATABASE ackward;
+USE ackward;
+
+CREATE TABLE user(
+	ID INT NOT NULL AUTO_INCREMENT,
+	name VARCHAR(32) NOT NULL,
+	password VARBINARY(255) NOT NULL,
+	PRIMARY KEY (ID)
+);
+
+CREATE TABLE event(
+	ID INT NOT NULL AUTO_INCREMENT,
+	title VARCHAR(32) NOT NULL,
+	time DATETIME NOT NULL,
+	PRIMARY KEY (ID)
+);
+
+INSERT INTO `event` (`ID`, `title`, `time`) VALUES
+(1, 'CS145 Docu', '2016-05-06 23:59:59'),
+(2, "CS145 Dragons' Den", '2016-05-07 10:40:00'),
+(3, 'AUB Interview', '2016-05-11 15:00:00'),
+(4, 'Philo LE', '2016-05-11 16:00:00'),
+(5, 'CS130 LE3 (Yap)', '2016-05-12 16:00:00'),
+(6, 'CS130 Finals (Nestine)', '2016-05-13 16:00:00'),
+(7, 'CS145 LE', '2016-05-14 16:00:00'),
+(8, 'Physics LE3', '2016-05-16 12:00:00');

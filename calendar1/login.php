@@ -2,6 +2,7 @@
 	session_start();
 	$_SESSION['activeUser']=NULL;
 	$linkDB=@mysql_connect('localhost', 'root', 'root');
+	$database=mysql_select_db('ackward');
 	date_default_timezone_set('Asia/Manila');
 
 	if(isset($_POST['login'])){
@@ -11,7 +12,6 @@
 		else{
 			$username=$_POST['username'];
 			$password=$_POST['password'];
-			$database=mysql_select_db('ackward');
 			$result=mysql_query("SELECT password FROM user WHERE name='$username'");
 			$row=mysql_fetch_array($result);
 			$hash=row['password'];
@@ -35,8 +35,8 @@
 			$password=$_POST['password'];
 			$hash=password_hash($password, PASSWORD_DEFAULT);
 			$database=mysql_select_db('ackward');
-			$sql = "INSERT INTO user VALUES ('$username', '$hash')";
-			$result=mysql_query($sql,$linkDB);
+			$sql = "INSERT INTO user (name, password) VALUES ('$username', '$hash')";
+			$result=mysql_query($sql);
 			
 			if ($result!=NULL) {
 				$_SESSION['activeUser']=$username;
