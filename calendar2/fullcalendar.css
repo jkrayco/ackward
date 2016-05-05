@@ -3,9 +3,7 @@
  * Docs & License: http://fullcalendar.io/
  * (c) 2016 Adam Shaw
  */
-#container {
-    width: 810px;
-}
+
 
 .fc {
 	direction: ltr;
@@ -1264,16 +1262,4 @@ be a descendant of the grid when it is being dragged.
 	border-width: 5px 6px 5px 0;
 	border-top-color: transparent;
 	border-bottom-color: transparent;
-}
-
-
-.sidenav{
-   /*float: left;*/
-   height: 455px;
-   background-color: white;
-   width: 350px;
-   display: inline-block;
-   border: solid;
-   border-color: gray;
-   overflow: scroll;
 }

@@ -25,8 +25,8 @@
   </head>
  
 <body>
-  <div id='container'>
-	<div id='calendar'></div>
-  </div>
+
+  <div id='calendar'></div>
+
 </body>
 </html>
