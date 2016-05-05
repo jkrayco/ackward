@@ -7,7 +7,7 @@
 	    $id = $_GET['id']; 
 	}
 
-  	$strSQL = "DELETE FROM event WHERE id = '$id'"; 
+  	$strSQL = "DELETE FROM event WHERE id = '$id'";
 	$result = mysql_query($strSQL) or die (mysql_error());
 
 	header("Location: showall.php");
