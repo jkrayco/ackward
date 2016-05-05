@@ -1,10 +1,38 @@
+<?php
+	session_start();
+	$_SESSION['activeUser']=NULL;
+	$linkDB=@mysql_connect('localhost', 'root', 'root');
+	date_default_timezone_set('Asia/Manila');
+
+	if(isset($_POST['login'])){
+		if(empty($_POST['username']) or empty($_POST['password'])){
+			echo('Invalid username and password combination.');
+		}
+		else{
+			$username=$_POST['username'];
+			$password=$_POST['password'];
+			$database=mysql_select_db('ackward');
+			$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
+			$row=mysql_fetch_array($result);
+			#if(password_verify($password, $row[0])){
+			if(row!=NULL){
+				$_SESSION['activeUser']=$username;
+				header("location: calendar.php");
+			}
+			else{
+				echo('Invalid username and password combination.');
+				echo $hash;
+			}
+		}
+	}
+?>
 
 <html>
 	<head>
 		<title>ACKWARD Calendar</title>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
-		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lobster" />
+		<link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Lobster" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		
