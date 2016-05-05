@@ -31,29 +31,29 @@
     </script>
   </head>
  
-<body style = "overflow: auto; padding: 50px">
+<body style = "overflow: auto;">
 <div class="container-fluid">
   
 
-      <div style = " width:800px; float:left" class="col-sm-9">
+      <div style = " width:60%; float:left" class="col-sm-9">
            <div id='calendar'></div>
       </div>
-      <div style = "background-color:#e0f8ff; width:400px; float:left; padding-left: 20px class="col-sm-3">
+      <div style = "background-color:#e0f8ff; width:38%; float:right; class=col-sm-3; padding-left: 1%">
        
-        <div class="sidenav" style = "padding-left: 50px">
+        <div class="sidenav" style = "padding-left: 0px">
           <br>
           <a href="index.php?add"> Add New Event </a><br>
           <a href="index.php?show=all"> Show All Events </a>
           <br><br>
           <?php
 
-            mysql_connect("localhost", "root", "") or die (mysql_error());
+            mysql_connect("localhost", "root", "root") or die (mysql_error());
             mysql_select_db("ackward") or die(mysql_error());
 
             if (isset($_GET['show'])){
 
               if ($_GET['show'] == "all"){
-                $strSQL = "SELECT id, title, time FROM event";
+                $strSQL = "SELECT id, title, start FROM event";
                 $result = mysql_query($strSQL) or die (mysql_error());
 
                 while($row = mysql_fetch_array($result)){

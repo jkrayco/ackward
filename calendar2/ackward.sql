@@ -12,11 +12,11 @@ CREATE TABLE user(
 CREATE TABLE event(
 	ID INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(32) NOT NULL,
-	time DATETIME NOT NULL,
+	start DATETIME NOT NULL,
 	PRIMARY KEY (ID)
 );
 
-INSERT INTO `event` (`ID`, `title`, `time`) VALUES
+INSERT INTO `event` (`ID`, `title`, `start`) VALUES
 (1, 'CS145 Docu', '2016-05-06 23:59:59'),
 (2, "CS145 Dragons' Den", '2016-05-07 10:40:00'),
 (3, 'AUB Interview', '2016-05-11 15:00:00'),
