@@ -4,6 +4,11 @@
  * (c) 2016 Adam Shaw
  */
 
+*{
+	margin: 0;
+	padding: 0;
+	/*font-family: Tahoma;*/
+}
 
 .fc {
 	direction: ltr;
@@ -1262,4 +1267,39 @@ be a descendant of the grid when it is being dragged.
 	border-width: 5px 6px 5px 0;
 	border-top-color: transparent;
 	border-bottom-color: transparent;
+}
+
+#header h1{
+	padding:5px;
+	font-family:Lobster;
+	position: relative;
+	padding: 0;
+	margin: 0;
+}
+#header {
+	background-color:#2887c1;
+	color:white;
+	text-align:center;
+	padding: 0%;
+}
+
+.buttons{
+	font-family: Tahoma;
+	display: inline;
+}
+
+.l{
+	display: inline;
+}
+.inline{
+	/*display: inline;*/
+}
+
+.container-fluid{
+	margin: 2% 2% 2% 2%;
+}
+
+.content{
+	/*position: relative;*/
+	/*overflow: scroll;*/
 }

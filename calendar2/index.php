@@ -9,11 +9,16 @@
     <script src='jquery.min.js'></script>
     <script src='moment.min.js'></script>
     <script src='fullcalendar.js'></script>
-<!-- 
+
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Lobster" />
+
+
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
- -->
+
     <script>
 
         $(document).ready(function() {
@@ -31,78 +36,99 @@
     </script>
   </head>
  
-<body style = "overflow: auto;">
+<body style = "position: fixed; overflow: hidden;">
+
+<div id="header">
+      <h1>Ackward Calendar</h1>
+</div>
+
 <div class="container-fluid">
   
 
-      <div style = " width:60%; float:left" class="col-sm-9">
+      <div style = " width:55%; float:left; margin-left: 5px; margin-top: 5px; overflow: scroll" class="col-sm-9">
            <div id='calendar'></div>
       </div>
-      <div style = "background-color:#e0f8ff; width:38%; float:right; class=col-sm-3; padding-left: 1%">
+
+      <div class="col-sm-3" style = "background-color:#e0f8ff; width:30%; height:535px; float: left; padding: 1% 1% 1% 1%; margin-left: 10px">
        
-        <div class="sidenav" style = "padding-left: 0px">
-          <br>
-          <a href="index.php?add"> Add New Event </a><br>
-          <a href="index.php?show=all"> Show All Events </a>
-          <br><br>
-          <?php
+        <div class="top">
+          <ul class="nav nav-pills nav-justified">
+            <li><a href="index.php?add">Add New Event</a></li>
+            <li><a href="index.php?show=all">Show All Events</a></li>
+          </ul>
+          <!-- <br> -->
+        </div>
+            <?php
 
-            mysql_connect("localhost", "root", "root") or die (mysql_error());
-            mysql_select_db("ackward") or die(mysql_error());
+              mysql_connect("localhost", "root", "root") or die (mysql_error());
+              mysql_select_db("ackward") or die(mysql_error());
 
-            if (isset($_GET['show'])){
+              if (isset($_GET['show'])){
 
-              if ($_GET['show'] == "all"){
-                $strSQL = "SELECT id, title, start FROM event";
-                $result = mysql_query($strSQL) or die (mysql_error());
-
-                while($row = mysql_fetch_array($result)){
-                  echo $row['title'].'<tab>'.$row['time'];
-                  echo '<a href="index.php?edit='.$row['id'].'" class="button" type="submit"> Edit Event </a>';
-                  echo '<a href="index.php?del='.$row['id'].'" class="button" type="submit"> Delete Event </a>';
-                  echo '<br>';
+                if ($_GET['show'] == "all"){
+                  $strSQL = "SELECT ID, title, start FROM event";
+                  $result = mysql_query($strSQL) or die (mysql_error());
+                  ?><div class="content" style= "overflow: scroll; height: 460px;"><?php
+                  while($row = mysql_fetch_array($result)){
+                    ?>
+                    <div class="inline">
+                      <div class="l">
+                        <?php
+                        echo $row['title'].'<br>'.$row['start'];
+                        ?>
+                      </div>
+                      <div class="buttons" style="float: right; padding:0px">
+                        <div class="btn-group" role="group" aria-label="...">
+                          <a href="index.php?edit=<?php echo $row['id'] ?>" class="btn btn-info" role="button" style="font-size:12px">Edit</a>
+                          <a href="index.php?del=<?php echo $row['id'] ?>" class="btn btn-info" role="button" style="font-size:12px">Delete</a>
+                        </div>
+                      </div>
+                    </div>
+                    <br><?php
+                    echo '<br>';
+                  }
                 }
+
               }
 
-            }
+              if (isset($_GET['add'])){
+                ?>
+                <form action="show.php" method="post">
+                  Name of Event: <input type="text" name="title"> <br >
+                  Date and Time of Event: <input type="datetime" name="time"/><br >
+                  <input name = "add" type = "submit" id = "add" value = "Add Event">
+                </form><?php
+              }
 
-            if (isset($_GET['add'])){
-              ?>
-              <form action="show.php" method="post">
-                Name of Event: <input type="text" name="title"> <br >
-                Date and Time of Event: <input type="datetime" name="time" ><br >
-                <input name = "add" type = "submit" id = "add" value = "Add Event">
-              </form><?php
-            }
+              if (isset($_GET['edit'])){
+                $strSQL = "SELECT * FROM event WHERE id = '$id'"; 
+                $result = mysql_query($strSQL) or die (mysql_error());
+                $row = mysql_fetch_array($result);
+                ?>
 
-            if (isset($_GET['edit'])){
-              $strSQL = "SELECT * FROM event WHERE id = '$id'"; 
-              $result = mysql_query($strSQL) or die (mysql_error());
-              $row = mysql_fetch_array($result);
-              ?>
+                <p> Edit Event </p>
+                
+                <form action="showedit.php" method="post">
+                  <p> EVENT ID: <?php echo $row['id'] ?> </p>
+                  Name of Event: <input type="text" name="title" value="<?php echo $row['title'] ?>"> <br >
+                  Date and Time of Event: <input type="datetime" name="time" value="<?php echo $row['time'] ?>"><br >
+                  <input name = "update" type = "submit" id = "update" value = "Edit Event">
+                </form>
 
-              <p> Edit Event </p>
-              
-              <form action="showedit.php" method="post">
-                <p> EVENT ID: <?php echo $row['id'] ?> </p>
-                Name of Event: <input type="text" name="title" value="<?php echo $row['title'] ?>"> <br >
-                Date and Time of Event: <input type="datetime" name="time" value="<?php echo $row['time'] ?>"><br >
-                <input name = "update" type = "submit" id = "update" value = "Edit Event">
-              </form>
+                <?php
+              }
 
-              <?php
-            }
+              if (isset($_GET['del'])){
+                ?>
 
-            if (isset($_GET['del'])){
-              ?>
+                <p> confirm delete alert box hi </p>
 
-              <p> confirm delete alert box </p>
-
-              <?php
-            }
-          ?>
+                <?php
+              }
+            ?>
+          </div>
         </div>
-        </div>
+      </div>
   
 
 </div>
