@@ -14,10 +14,9 @@
 			$database=mysql_select_db('ackward');
 			$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
 			$row=mysql_fetch_array($result);
-			#if(password_verify($password, $row[0])){
 			if($row!=NULL){
 				$_SESSION['activeUser']=$username;
-				header("location: calendar.php");
+				header("location: index.php");
 			}
 			else{
 				echo('Invalid username and password combination.');
