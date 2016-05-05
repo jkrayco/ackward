@@ -6,8 +6,12 @@
 	date_default_timezone_set('Asia/Manila');
 
 	if(isset($_POST['login'])){
-		if(empty($_POST['username']) or empty($_POST['password'])){
-			echo('Invalid username and password combination.');
+		if(empty($_POST['username']) or empty($_POST['password'])){?>
+			<div class="alert alert-danger">
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				<strong>Error!</strong> Did not enter username/password.
+			</div>
+		<?php
 		}
 		else{
 			$username=$_POST['username'];
@@ -19,23 +23,35 @@
 				$_SESSION['activeUser']=$username;
 				header("location: index.php");
 			}
-			else{
-				echo('Invalid username and password combination.');
+			else{?>
+			<div class="alert alert-danger">
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				<strong>Error!</strong> Username and password do not match.
+			</div>
+		<?php
 			}
 		}
 	}
 
 	if(isset($_POST['signup'])){
-		if(empty($_POST['username']) or empty($_POST['password']) or empty($_POST['re-password'])){
-			echo('Invalid username and password combination. Cant sign up.');
+		if(empty($_POST['username']) or empty($_POST['password']) or empty($_POST['re-password'])){?>
+			<div class="alert alert-danger">
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				<strong>Error!</strong> Did not enter username/password.
+			</div>
+		<?php
 		}
 		else{
 			$username=$_POST['username'];
 			$password=$_POST['password'];
 			$repassword=$_POST['re-password'];
 			
-			if ($repassword!=$password){
-				echo "Not same password.";
+			if ($repassword!=$password){?>
+			<div class="alert alert-danger">
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				<strong>Error!</strong> Re-entered password does not match.
+			</div>
+		<?php
 			}
 			else{
 				$hash=password_hash($password, PASSWORD_DEFAULT);
@@ -46,17 +62,6 @@
 				$_SESSION['activeUser']=$username;
 				header("location: index.php");
 			}
-			
-			#$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
-			#$row=mysql_fetch_array($result);
-			#if($row!=NULL){
-			#	$_SESSION['activeUser']=$username;
-			#	header("location: index.php");
-			#}
-			#else{
-			#	echo('Invalid username and password combination.');
-			#	echo $hash;
-			#}
 		}
 	}
 ?>
@@ -82,7 +87,6 @@
 				background-position:center;
 				background-size:cover;
 			}
-			
 			.fieldset1 fieldset{
 				float:left;
 				margin-left:10%;
