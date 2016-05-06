@@ -57,9 +57,6 @@ time_t prevDisplay = 0;
 int j = 0;
 String eventTitle = "12345678901234567890123456789012", eventTime = "1234567890"; //32-byte long eventTitle and 10-byte long eventTime strings
 
-void software_Reset(){ // Restarts program from beginning but does not reset the peripherals and registers
-  asm volatile ("  jmp 0");  
-}  
 
 // Do not alter this function, it is used by the system
 unsigned long sendNTPpacket(IPAddress& address)
@@ -113,13 +110,14 @@ void checkEvent(){
     if (client.connect(server, 80)) {
       Serial.println("Connected.");
       // Make an HTTP request:
-      client.println("GET /ackward/test.php HTTP/1.1");
+      client.println("GET /ackward/sync.php HTTP/1.1");
       client.println("Host: 192.168.1.5");
       client.println();
     } else {
       // if you didn't get a connection to the server:
       Serial.println("Connection failed. Please restart the system.");
-      software_Reset();
+      //software_Reset();
+      while(true);
     }
    
   // if there are incoming bytes available
@@ -284,7 +282,8 @@ void setup() {
   }
   else{
     Serial.println("Connection failed. Please restart the system.");
-    software_Reset();
+    //software_Reset();
+    while(true);
   }
   checkEvent();
 }
@@ -304,7 +303,8 @@ void loop() {
       }
       else{
         Serial.println("Connection failed. Please restart the system.");
-        software_Reset();
+        //software_Reset();
+        while(true);
       }
     }
   
@@ -324,7 +324,9 @@ void loop() {
         j = 0;
         clockBeep();
       }
-      else
+      else{
+        Serial.println(eventTitle);
         clockDisplay(); 
+      }
     }
 }
