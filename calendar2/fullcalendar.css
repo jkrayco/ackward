@@ -23,6 +23,10 @@ body .fc { /* extra precedence to overcome jqui */
 	font-size: 1em;
 }
 
+body{
+	/*background-image:url('bg.jpg');*/
+}
+
 
 /* Colors
 --------------------------------------------------------------------------------------------------*/
@@ -1297,9 +1301,12 @@ be a descendant of the grid when it is being dragged.
 
 .container-fluid{
 	margin: 2% 2% 2% 2%;
+	/*background-color: white;*/
 }
 
-.content{
-	/*position: relative;*/
-	/*overflow: scroll;*/
-}
+/*.top{
+	background-color: white;
+	padding: 0;
+	height: auto;
+}*/
+
