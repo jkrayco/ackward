@@ -104,7 +104,10 @@
 <body style = "position: fixed; overflow: hidden;">
 
 <div id="header">
-      <h1>Ackward Calendar</h1>
+      <h1 style="display: inline;">Ackward Calendar</h1>
+      <!-- <button type="button" class="btn btn-default" style="float: right; display: inline-block;">Logout</button> -->
+      <!-- <p style="float: right; display: inline-block; margin:0">logout</p> -->
+      <a href="/ackward/calendar2/login.php" style="color:white; font-size: 25px;"><span class="glyphicon glyphicon-log-out" aria-hidden="true" style="float: right; display: inline-block; margin-right: 8px; margin-top: 5px""></span></a>
 </div>
 
 <div class="container-fluid" style= "margin-left: 7%">
@@ -192,19 +195,21 @@
               }
 
               if (isset($_GET['add'])){
-                ?><center><br>
-                <form action="" method="post">
+                ?><br>
+                <form action="" method="post"><center>
                   Name of Event: <input class="textbox" type="text" name="title"> <br><br>
                   Date of Event: <input class="textbox" type="date" name="date"><br><br>
                   Time of Event: 
                   <input class="textbox" type="time" name="time"><br><br>
+                  Send to: <input class="textbox" type="text" name="title" value="username"> <br><br></center>
+
                   <div class="buttons"><center>
                         <div class="btn-group" role="group" aria-label="...">
                   <input name = "add" type = "submit" id = "add" value = "Add Event" class="btn btn-info" role="button" style="font-size:12px">
                   <input name = "cancel" type = "submit" id = "cancel" value = "Cancel" class="btn btn-info" role="button" style="font-size:12px">
                   </div></center>
                   </div>
-                </form></center><?php
+                </form><?php
               }
 
               if (isset($_GET['edit'])){
