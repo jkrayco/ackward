@@ -111,8 +111,8 @@
                       </div>
                       <div class="buttons" style="float: right">
                         <div class="btn-group" role="group" aria-label="...">
-                          <a href="index.php?edit=<?php echo $row['id'] ?>" class="btn btn-info" role="button" style="font-size:12px">Edit</a>
-                          <a href="index.php?del=<?php echo $row['id'] ?>" class="btn btn-info" role="button" style="font-size:12px">Delete</a>
+                          <a href='index.php?edit=<?php echo $row['ID'];?>' class="btn btn-info" role="button" style="font-size:12px">Edit</a>
+                          <a href='index.php?del=<?php echo $row['ID'];?>' class="btn btn-info" role="button" style="font-size:12px">Delete</a>
                         </div>
                       </div>
                     </div>
@@ -131,22 +131,26 @@
                   Time of Event: 
                   <input type="time" name="usr_time"><br><br>
                   <input name = "add" type = "submit" id = "add" value = "Add Event">
+                  <input name = "cancel" type = "submit" id = "cancel" value = "Cancel">
                 </form><?php
               }
 
               if (isset($_GET['edit'])){
-                $strSQL = "SELECT * FROM event WHERE id = '$id'"; 
+                $id = $_GET['edit'];
+                $strSQL = "SELECT * FROM event WHERE ID = '$id'"; 
                 $result = mysql_query($strSQL) or die (mysql_error());
                 $row = mysql_fetch_array($result);
                 ?>
 
                 <p> Edit Event </p>
                 
-                <form action="showedit.php" method="post">
+                <form action="index.php?show=all" method="post">
                   <p> EVENT ID: <?php echo $row['id'] ?> </p>
                   Name of Event: <input type="text" name="title" value="<?php echo $row['title'] ?>"> <br >
-                  Date and Time of Event: <input type="datetime" name="time" value="<?php echo $row['time'] ?>"><br >
+                  Date of Event: <input type="date" name="date"><br><br>
+                  Time of Event: <input type="time" name="usr_time"><br><br>
                   <input name = "update" type = "submit" id = "update" value = "Edit Event">
+                  <input name = "cancel" type = "submit" id = "cancel" value = "Cancel">
                 </form>
 
                 <?php
