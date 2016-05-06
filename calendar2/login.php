@@ -79,11 +79,14 @@
 				background-size:cover;
 			}
 			
-			.fieldset1 fieldset{
+			.fieldset1{
 				float:left;
 				margin-left:10%;
-				margin-top:5%;
+				margin-top:8%;
+			}
+			.fieldset1 fieldset{
 				border: none;
+				font-size:20px;
 			}
 			.fieldset2{
 				float:right;
@@ -165,8 +168,15 @@
 		
 		<div class="fieldset1">
 			<fieldset>
+				<legend>
+					<strong>Calendar and Alarm Clock : Perfect combination~</strong>
+				</legend>
 				<p>
-					*insert text introducing Ackward calendar*
+					<br>
+					     Ackward is an online calendar that is connected to your own personal alarm <br>clock. You can add and manage events. You can also share event details to <br>your family's, friends', or colleague's Ackward. 
+					<br>
+					<br>
+					Never miss out on important dates ever again!
 				</p>
 			</fieldset>
 		</div>
