@@ -38,14 +38,14 @@ CREATE TABLE `event` (
 --
 
 INSERT INTO `event` (`ID`, `title`, `start`, `url`) VALUES
-(1, 'CS145 Docu', '2016-05-06 23:59:59', 'http://localhost/calendar2/index.php?show=all'),
-(2, 'CS145 Dragons'' Den', '2016-05-07 10:40:00', 'http://localhost/calendar2/index.php?show=all'),
-(3, 'AUB Interview', '2016-05-11 15:00:00', 'http://localhost/calendar2/index.php?show=all'),
-(4, 'Philo LE', '2016-05-11 16:00:00', 'http://localhost/calendar2/index.php?show=all'),
-(5, 'CS130 LE3 (Yap)', '2016-05-12 16:00:00', 'http://localhost/calendar2/index.php?show=all'),
-(6, 'CS130 Finals (Nestine)', '2016-05-13 16:00:00', 'http://localhost/calendar2/index.php?show=all'),
-(7, 'CS145 LE', '2016-05-14 16:00:00', 'http://localhost/calendar2/index.php?show=all'),
-(8, 'Physics LE3', '2016-05-16 12:00:00', 'http://localhost/calendar2/index.php?show=all');
+(1, 'CS145 Docu', '2016-05-06 23:59:59', 'http://localhost/ackward/calendar2/index.php?edit=1'),
+(2, 'CS145 Dragons'' Den', '2016-05-07 10:40:00', 'http://localhost/ackward/calendar2/index.php?edit=2'),
+(3, 'AUB Interview', '2016-05-11 15:00:00', 'http://localhost/ackward/calendar2/index.php?edit=3'),
+(4, 'Philo LE', '2016-05-11 16:00:00', 'http://localhost/ackward/calendar2/index.php?edit=3'),
+(5, 'CS130 LE3 (Yap)', '2016-05-12 16:00:00', 'http://localhost/ackward/calendar2/index.php?edit=4'),
+(6, 'CS130 Finals (Nestine)', '2016-05-13 16:00:00', 'http://localhost/ackward/calendar2/index.php?edit=5'),
+(7, 'CS145 LE', '2016-05-14 16:00:00', 'http://localhost/ackward/calendar2/index.php?edit=6'),
+(8, 'Physics LE3', '2016-05-16 12:00:00', 'http://localhost/ackward/calendar2/index.php?edit=7');
 
 -- --------------------------------------------------------
 
