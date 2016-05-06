@@ -154,7 +154,30 @@
                       
                       <div class="eventtime">
                         <?php
-                        echo $row['start'];
+                        $monthNum  = date('m',strtotime($row['start']));
+						$dateObj   = DateTime::createFromFormat('!m', $monthNum);
+						$monthName = $dateObj->format('F');
+						$hr = date('H',strtotime($row['start']));
+                        echo $monthName;
+                        echo " ";
+                        echo date('d',strtotime($row['start']));
+                        echo ", ";
+                        echo date('Y',strtotime($row['start']));
+                        ?><br><?php
+                        if ($hr%12==0){
+                        	echo "12";
+                        }
+                        else{
+                        	echo $hr%12;
+                        }
+                        echo date(':i ',strtotime($row['start']));
+                        if ($hr<12){
+                        	echo "AM";
+                        }
+                        else{
+                        	echo "PM";
+                        }
+
                         ?>
                       </div>
 
