@@ -311,7 +311,7 @@ void loop() {
     // Display the time if it has changed by more than a second.
     if( now() != prevDisplay){
       prevDisplay = now();
-      if (prevDisplay >= eventTime.toInt() + timeZoneOffset && minute(prevDisplay) == minute(eventTime.toInt() + timeZoneOffset) && eventTime.length() != 0){
+      if (prevDisplay >= eventTime.toInt() + timeZoneOffset && prevDisplay < eventTime.toInt() + timeZoneOffset + 60 && eventTime.length() != 0){
         if (prevDisplay == eventTime.toInt() + timeZoneOffset)
           j = 0;
         clockAlarm();
@@ -320,7 +320,7 @@ void loop() {
           lcd.clear();
         }
       }
-      else if (prevDisplay == eventTime.toInt() + timeZoneOffset - ntpSyncTime){
+      else if (prevDisplay == eventTime.toInt() + timeZoneOffset - 30*60){
         j = 0;
         clockBeep();
       }
