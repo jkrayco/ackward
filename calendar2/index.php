@@ -50,13 +50,13 @@
       </div>
 
       <div class="col-sm-3" style = "background-color:#e0f8ff; width:30%; height:535px; float: left; padding: 1% 1% 1% 1%; margin-left: 10px">
-       
+      
         <div class="top">
           <ul class="nav nav-pills nav-justified">
             <li><a href="index.php?add">Add New Event</a></li>
             <li><a href="index.php?show=all">Show All Events</a></li>
           </ul>
-          <!-- <br> -->
+          <br>
         </div>
             <?php
 
@@ -77,7 +77,7 @@
                         echo $row['title'].'<br>'.$row['start'];
                         ?>
                       </div>
-                      <div class="buttons" style="float: right; padding:0px">
+                      <div class="buttons" style="float: right">
                         <div class="btn-group" role="group" aria-label="...">
                           <a href="index.php?edit=<?php echo $row['id'] ?>" class="btn btn-info" role="button" style="font-size:12px">Edit</a>
                           <a href="index.php?del=<?php echo $row['id'] ?>" class="btn btn-info" role="button" style="font-size:12px">Delete</a>
@@ -94,8 +94,10 @@
               if (isset($_GET['add'])){
                 ?>
                 <form action="show.php" method="post">
-                  Name of Event: <input type="text" name="title"> <br >
-                  Date and Time of Event: <input type="datetime" name="time"/><br >
+                  Name of Event: <input type="text" name="title"> <br><br>
+                  Date of Event: <input type="date" name="date"><br><br>
+                  Time of Event: 
+                  <input type="time" name="usr_time"><br><br>
                   <input name = "add" type = "submit" id = "add" value = "Add Event">
                 </form><?php
               }
@@ -121,7 +123,7 @@
               if (isset($_GET['del'])){
                 ?>
 
-                <p> confirm delete alert box hi </p>
+                <p> confirm delete alert box </p>
 
                 <?php
               }
