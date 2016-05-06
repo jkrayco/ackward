@@ -2,60 +2,70 @@
 	session_start();
 	$_SESSION['activeUser']=NULL;
 	$linkDB=@mysql_connect('localhost', 'root', 'root');
+	$database=mysql_select_db('ackward');
 	date_default_timezone_set('Asia/Manila');
 
 	if(isset($_POST['login'])){
-		if(empty($_POST['username']) or empty($_POST['password'])){
-			echo('Invalid username and password combination.');
+		if(empty($_POST['username']) or empty($_POST['password'])){?>
+			<div class="alert alert-danger">
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				<strong>Error!</strong> Did not enter username/password.
+			</div>
+		<?php
 		}
 		else{
 			$username=$_POST['username'];
 			$password=$_POST['password'];
-			$database=mysql_select_db('ackward');
-			$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
+			$result=mysql_query("SELECT password FROM user WHERE name='$username'");
 			$row=mysql_fetch_array($result);
-			if($row!=NULL){
+			$hash=$row['password'];
+			if(password_verify($password, $hash)){
 				$_SESSION['activeUser']=$username;
 				header("location: index.php");
 			}
-			else{
-				echo('Invalid username and password combination.');
-				echo $hash;
+			else{?>
+			<div class="alert alert-danger">
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				<strong>Error!</strong> Username and password do not match.
+			</div>
+		<?php
 			}
 		}
 	}
 
 	if(isset($_POST['signup'])){
-		if(empty($_POST['username']) or empty($_POST['password'])){
-			echo('Invalid username and password combination. Cant sign up.');
+		if(empty($_POST['username']) or empty($_POST['password']) or empty($_POST['re-password'])){?>
+			<div class="alert alert-danger">
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				<strong>Error!</strong> Did not enter username/password.
+			</div>
+		<?php
 		}
 		else{
 			$username=$_POST['username'];
 			$password=$_POST['password'];
-			$database=mysql_select_db('ackward');
-			$sql = "INSERT INTO user VALUES ('$username', '$password')";
-			$result=mysql_query($sql,$linkDB);
+			$repassword=$_POST['re-password'];
 			
-			if ($result!=NULL) {
+			if ($repassword!=$password){?>
+			<div class="alert alert-danger">
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+				<strong>Error!</strong> Re-entered password does not match.
+			</div>
+		<?php
+			}
+			else{
+				$hash=password_hash($password, PASSWORD_DEFAULT);
+				$database=mysql_select_db('ackward');
+				$sql = "INSERT INTO user (name, password) VALUES ('$username', '$hash')";
+				$result=mysql_query($sql);
+			
 				$_SESSION['activeUser']=$username;
 				header("location: index.php");
 			}
-			else {
-				echo "Error";
-			}
-			#$result=mysql_query("SELECT * FROM user WHERE name='$username' and password='$password'");
-			#$row=mysql_fetch_array($result);
-			#if($row!=NULL){
-			#	$_SESSION['activeUser']=$username;
-			#	header("location: index.php");
-			#}
-			#else{
-			#	echo('Invalid username and password combination.');
-			#	echo $hash;
-			#}
 		}
 	}
 ?>
+
 
 <html>
 	<head>
@@ -200,6 +210,8 @@
 					<input type="text" name="username" class="input-block-level" placeholder="Username"/>
 					<br>
 					<input type="password" name="password" class="input-block-level" placeholder="Password"/>
+					<br>
+					<input type="password" name="re-password" class="input-block-level" placeholder="Re-enter Password"/>
 					<br>
 					<center>
 					<input type="submit" name="signup" class="myButton" id="btn-login" style="color: #fffff" value="Sign Up"/>
