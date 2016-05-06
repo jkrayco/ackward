@@ -1,24 +1,57 @@
 <?php
+
+	$conn = @mysql_connect("localhost", "root", "root");
+    mysql_select_db('ackward');
+
 	if(isset($_POST['add'])){
-		$conn = @mysql_connect("localhost", "root", "root");
-	    mysql_select_db('ackward');
 		
 		if(! get_magic_quotes_gpc() ) {
 	        $name = addslashes ($_POST['title']);
 	        $adate = addslashes ($_POST['date']);
-	        $atime = addslashes ($_POST['usr_time']);
+	        $atime = addslashes ($_POST['time']);
 	    } else {
 	    	$name = $_POST['title'];
 	        $adate = $_POST['date'];
-	        $atime = $_POST['usr_time'];
+	        $atime = $_POST['time'];
 	    }
 		$adatetime = date('Y-m-d H:i:s', strtotime("$adate $atime"));
 		
 	    $strSQL = "INSERT INTO event (title, start) VALUES ('$name', '$adatetime')";
 	    $result = mysql_query($strSQL) or die (mysql_error());
-
-	    echo "Entered data successfully!";
    	}
+
+   	if(isset($_POST['edit'])){
+		
+		if(! get_magic_quotes_gpc() ) {
+	        $name = addslashes ($_POST['title']);
+	        $adate = addslashes ($_POST['date']);
+	        $atime = addslashes ($_POST['time']);
+	    } else {
+	    	$name = $_POST['title'];
+	        $adate = $_POST['date'];
+	        $atime = $_POST['time'];
+	    }
+		$adatetime = date('Y-m-d H:i:s', strtotime("$adate $atime"));
+		$id = $_GET['edit'];
+		
+	    $strSQL = "UPDATE event SET title='$name', start='$adatetime' WHERE ID='$id'";
+	    $result = mysql_query($strSQL) or die (mysql_error());
+
+	    header("location: index.php?show=all");
+   	}
+
+   	if(isset($_POST['cancel'])){
+   		header("location: index.php?show=all");
+   	}
+
+    if (isset($_GET['del'])){
+    	$id = $_GET['del'];
+    	$strSQL = "DELETE FROM event WHERE ID='$id'";
+    	$result = mysql_query($strSQL) or die (mysql_error());
+
+    	header("location: index.php?show=all");
+    }
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -74,14 +107,14 @@
       <h1>Ackward Calendar</h1>
 </div>
 
-<div class="container-fluid">
+<div class="container-fluid" style= "margin-left: 7%">
   
 
-      <div style = " width:55%; float:left; margin-left: 5px; margin-top: 5px; overflow: scroll" class="col-sm-9">
+      <div style = " width:59%; float:left; margin-left: 3px; margin-top:3px; overflow: scroll" class="col-sm-9">
            <div id='calendar'></div>
       </div>
 
-      <div class="col-sm-3" style = "background-color:#e0f8ff; width:30%; height:535px; float: left; padding: 1% 1% 1% 1%; margin-left: 10px">
+      <div class="col-sm-3" style = "background-color:#e0f8ff; width:30%; height:535px; float: left; padding: 0.5% 0.5% 0.5% 0.5%; margin-left: 10px">
       
         <div class="top">
           <ul class="nav nav-pills nav-justified">
@@ -98,7 +131,7 @@
               if (isset($_GET['show'])){
 
                 if ($_GET['show'] == "all"){
-                  $strSQL = "SELECT ID, title, start FROM event";
+                  $strSQL = "SELECT ID, title, start FROM event ORDER BY start";
                   $result = mysql_query($strSQL) or die (mysql_error());
                   ?><div class="content" style= "overflow: scroll; height: 460px;"><?php
                   while($row = mysql_fetch_array($result)){
@@ -129,7 +162,7 @@
                   Name of Event: <input type="text" name="title"> <br><br>
                   Date of Event: <input type="date" name="date"><br><br>
                   Time of Event: 
-                  <input type="time" name="usr_time"><br><br>
+                  <input type="time" name="time"><br><br>
                   <input name = "add" type = "submit" id = "add" value = "Add Event">
                   <input name = "cancel" type = "submit" id = "cancel" value = "Cancel">
                 </form><?php
@@ -144,22 +177,14 @@
 
                 <p> Edit Event </p>
                 
-                <form action="index.php?show=all" method="post">
+                <form action="" method="post">
                   <p> EVENT ID: <?php echo $row['id'] ?> </p>
-                  Name of Event: <input type="text" name="title" value="<?php echo $row['title'] ?>"> <br >
-                  Date of Event: <input type="date" name="date"><br><br>
-                  Time of Event: <input type="time" name="usr_time"><br><br>
-                  <input name = "update" type = "submit" id = "update" value = "Edit Event">
-                  <input name = "cancel" type = "submit" id = "cancel" value = "Cancel">
+                  Name of Event: <input type="text" name="title" value="<?php echo $row['title'] ?>"> <br><br>
+                  Date of Event: <input type="date" name="date" value="<?php echo date('Y-m-d', (strtotime($row['start'])))?>"><br><br>
+				  Time of Event: <input type="time" name="time" value="<?php echo date('H:i', (strtotime($row['start'])))?>"><br><br>
+                  <input name = "edit" type = "submit" value = "Edit Event">
+                  <input name = "cancel" type = "submit" value = "Cancel">
                 </form>
-
-                <?php
-              }
-
-              if (isset($_GET['del'])){
-                ?>
-
-                <p> confirm delete alert box </p>
 
                 <?php
               }
@@ -167,11 +192,15 @@
           </div>
         </div>
       </div>
-  
-
 </div>
-
-   
-    
 </body>
 </html>
+
+<script>
+	function confirmDelete(){
+		var ask=confirm("Are you sure?");
+		if(ask){
+			
+		}
+	}
+</script>

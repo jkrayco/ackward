@@ -17,6 +17,8 @@
 <form action="showedit.php" method="post">
 <p> EVENT ID: <?php echo $row['id'] ?> </p>
 Name of Event: <input type="text" name="name" value="<?php echo $row['name'] ?>"> <br >
-Date and Time of Event: <input type="datetime" name="atime" value="<?php echo $row['atime'] ?>"><br >
+Date of Event: <input type="datetime" name="atime" value="<?php echo date('Y-m-d', (strtotime($row['start'])))?>"><br >
+Time of Event: <input type="datetime" name="atime" value="<?php echo date('H:i:s', (strtotime($row['start'])))?>"><br >
+
 <input name = "update" type = "submit" id = "update" value = "Edit Event">
 </form>
