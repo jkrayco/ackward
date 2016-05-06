@@ -1,3 +1,26 @@
+<?php
+	if(isset($_POST['add'])){
+		$conn = @mysql_connect("localhost", "root", "root");
+	    mysql_select_db('ackward');
+		
+		if(! get_magic_quotes_gpc() ) {
+	        $name = addslashes ($_POST['title']);
+	        $adate = addslashes ($_POST['date']);
+	        $atime = addslashes ($_POST['usr_time']);
+	    } else {
+	    	$name = $_POST['title'];
+	        $adate = $_POST['date'];
+	        $atime = $_POST['usr_time'];
+	    }
+		$adatetime = date('Y-m-d H:i:s', strtotime("$adate $atime"));
+		
+	    $strSQL = "INSERT INTO event (title, start) VALUES ('$name', '$adatetime')";
+	    $result = mysql_query($strSQL) or die (mysql_error());
+
+	    echo "Entered data successfully!";
+   	}
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -34,6 +57,15 @@
 
       });
     </script>
+	<style>
+			body{
+				background-image:url('bg.jpg');
+				background-repeat: no-repeat;
+				background-attachment: fixed;
+				background-position:center;
+				background-size:cover;
+			}
+	</style>
   </head>
  
 <body style = "position: fixed; overflow: hidden;">
@@ -93,7 +125,7 @@
 
               if (isset($_GET['add'])){
                 ?>
-                <form action="show.php" method="post">
+                <form action="" method="post">
                   Name of Event: <input type="text" name="title"> <br><br>
                   Date of Event: <input type="date" name="date"><br><br>
                   Time of Event: 
