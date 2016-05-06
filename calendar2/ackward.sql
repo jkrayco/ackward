@@ -56,7 +56,8 @@ INSERT INTO `event` (`ID`, `title`, `start`, `url`) VALUES
 CREATE TABLE `user` (
   `ID` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `password` varbinary(255) NOT NULL
+  `password` varbinary(255) NOT NULL,
+	UNIQUE (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
