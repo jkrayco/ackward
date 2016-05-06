@@ -118,8 +118,8 @@
       
         <div class="top">
           <ul class="nav nav-pills nav-justified">
-            <li><a href="index.php?add">Add New Event</a></li>
-            <li><a href="index.php?show=all">Show All Events</a></li>
+            <li class="active"><a href="index.php?add" style="margin-right:1px;">Add New Event</a></li>
+            <li class="active"><a href="index.php?show=all">Show All Events</a></li>
           </ul>
           <br>
         </div>
@@ -137,17 +137,29 @@
                   while($row = mysql_fetch_array($result)){
                     ?>
                     <div class="inline">
-                      <div class="l">
-                        <?php
-                        echo $row['title'].'<br>'.$row['start'];
-                        ?>
-                      </div>
-                      <div class="buttons" style="float: right">
+
+                    	<div class="buttons" style="float: right">
                         <div class="btn-group" role="group" aria-label="...">
                           <a href='index.php?edit=<?php echo $row['ID'];?>' class="btn btn-info" role="button" style="font-size:12px">Edit</a>
                           <a href='index.php?del=<?php echo $row['ID'];?>' class="btn btn-info" role="button" style="font-size:12px">Delete</a>
                         </div>
                       </div>
+
+                      <div class="l"><div class="eventtitle"><strong>
+                        <?php
+                        echo $row['title'];
+                        ?>
+                        </strong>
+                      </div>
+                      
+                      <div class="eventtime">
+                        <?php
+                        echo $row['start'];
+                        ?>
+                      </div>
+
+                      </div>
+                      
                     </div>
                     <br><?php
                     echo '<br>';
@@ -157,15 +169,19 @@
               }
 
               if (isset($_GET['add'])){
-                ?>
+                ?><center><br>
                 <form action="" method="post">
-                  Name of Event: <input type="text" name="title"> <br><br>
-                  Date of Event: <input type="date" name="date"><br><br>
+                  Name of Event: <input class="textbox" type="text" name="title"> <br><br>
+                  Date of Event: <input class="textbox" type="date" name="date"><br><br>
                   Time of Event: 
-                  <input type="time" name="time"><br><br>
-                  <input name = "add" type = "submit" id = "add" value = "Add Event">
-                  <input name = "cancel" type = "submit" id = "cancel" value = "Cancel">
-                </form><?php
+                  <input class="textbox" type="time" name="time"><br><br>
+                  <div class="buttons"><center>
+                        <div class="btn-group" role="group" aria-label="...">
+                  <input name = "add" type = "submit" id = "add" value = "Add Event" class="btn btn-info" role="button" style="font-size:12px">
+                  <input name = "cancel" type = "submit" id = "cancel" value = "Cancel" class="btn btn-info" role="button" style="font-size:12px">
+                  </div></center>
+                  </div>
+                </form></center><?php
               }
 
               if (isset($_GET['edit'])){
@@ -175,16 +191,21 @@
                 $row = mysql_fetch_array($result);
                 ?>
 
-                <p> Edit Event </p>
-                
+                <center>
+                <!-- <h4 style="font-family: georgia"><i><strong> Edit Event </i></strong></h4><br>                         -->
+                <br>
                 <form action="" method="post">
-                  <p> EVENT ID: <?php echo $row['id'] ?> </p>
-                  Name of Event: <input type="text" name="title" value="<?php echo $row['title'] ?>"> <br><br>
-                  Date of Event: <input type="date" name="date" value="<?php echo date('Y-m-d', (strtotime($row['start'])))?>"><br><br>
-				  Time of Event: <input type="time" name="time" value="<?php echo date('H:i', (strtotime($row['start'])))?>"><br><br>
-                  <input name = "edit" type = "submit" value = "Edit Event">
-                  <input name = "cancel" type = "submit" value = "Cancel">
-                </form>
+                  <!-- <p> EVENT ID: <?php echo $row['id'] ?> </p> -->
+                  Name of Event: <input class="textbox" type="text" name="title" value="<?php echo $row['title'] ?>"> <br><br>
+                  Date of Event: <input class="textbox" type="date" name="date" value="<?php echo date('Y-m-d', (strtotime($row['start'])))?>"><br><br>
+				  Time of Event: <input class="textbox" type="time" name="time" value="<?php echo date('H:i', (strtotime($row['start'])))?>"><br><br>
+				  <div class="buttons">
+				  <div class="btn-group" role="group" aria-label="...">
+				  <center>
+                  <input name = "edit" type = "submit" value = "Edit Event" class="btn btn-info" role="button" style="font-size:12px">
+                  <input name = "cancel" type = "submit" value = "Cancel" class="btn btn-info" role="button" style="font-size:12px"></center>
+                  </div></div>
+                </form></center>
 
                 <?php
               }

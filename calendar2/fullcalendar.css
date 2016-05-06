@@ -23,6 +23,20 @@ body .fc { /* extra precedence to overcome jqui */
 	font-size: 1em;
 }
 
+.col-sm-3{
+	font-family: arial;
+}
+
+.textbox { 
+    background: white; 
+    border: 1px solid #DDD; 
+    border-radius: 5px; 
+    box-shadow: 0 0 5px #DDD inset; 
+    color: #666; 
+    outline: none; 
+    height:25px; 
+    width: 200px;
+   } 
 
 /* Colors
 --------------------------------------------------------------------------------------------------*/
@@ -1288,6 +1302,10 @@ be a descendant of the grid when it is being dragged.
 	display: inline;
 }
 
+.buttons a{
+	font-size: 12pt;
+}
+
 .l{
 	display: inline;
 }
@@ -1302,4 +1320,9 @@ be a descendant of the grid when it is being dragged.
 .content{
 	/*position: relative;*/
 	/*overflow: scroll;*/
+	padding: 0px 13px 0 13px;
+}
+
+.eventtitle {
+	font-size: 18px;
 }
