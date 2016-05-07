@@ -201,7 +201,8 @@
                   Date of Event: <input class="textbox" type="date" name="date"><br><br>
                   Time of Event: 
                   <input class="textbox" type="time" name="time"><br><br>
-                  <!-- Send to: <input class="textbox" type="text" name="title" value="username"> <br><br></center> -->
+                  * Send to: <input class="textbox" type="text" name="userID" value="username"> <br><br>
+                  <p style="font-size: 9pt">* For multiple users, separate with commas</p></center>
 
                   <div class="buttons"><center>
                         <div class="btn-group" role="group" aria-label="...">
@@ -220,13 +221,15 @@
                 ?>
 
                 <center>
-                <!-- <h4 style="font-family: georgia"><i><strong> Edit Event </i></strong></h4><br>                         -->
                 <br>
                 <form action="" method="post">
                   <!-- <p> EVENT ID: <?php echo $row['id'] ?> </p> -->
                   Name of Event: <input class="textbox" type="text" name="title" value="<?php echo $row['title'] ?>"> <br><br>
                   Date of Event: <input class="textbox" type="date" name="date" value="<?php echo date('Y-m-d', (strtotime($row['start'])))?>"><br><br>
 				  Time of Event: <input class="textbox" type="time" name="time" value="<?php echo date('H:i', (strtotime($row['start'])))?>"><br><br>
+				  * Send to: <input class="textbox" type="text" name="userID" value="username"> <br><br>
+                  <p style="font-size: 9pt">* For multiple users, separate with commas</p>
+
 				  <div class="buttons">
 				  <div class="btn-group" role="group" aria-label="...">
 				  <center>
